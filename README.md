@@ -1,4 +1,4 @@
-Turtle shell: a scheme for lightweight, portable shell environments
+Turtle shell
 ====
 
 [Documentation coming soon.]
