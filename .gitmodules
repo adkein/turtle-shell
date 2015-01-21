@@ -1,0 +1,36 @@
+[submodule "config/vim/bundle/ack.vim"]
+	path = config/vim/bundle/ack.vim
+	url = git@github.com:mileszs/ack.vim.git
+[submodule "config/vim/bundle/ctrlp.vim"]
+	path = config/vim/bundle/ctrlp.vim
+	url = git@github.com:kien/ctrlp.vim.git
+[submodule "config/vim/bundle/vim-fugitive"]
+	path = config/vim/bundle/fugitive
+	url = git@github.com:tpope/vim-fugitive.git
+[submodule "config/vim/bundle/gitv"]
+	path = config/vim/bundle/gitv
+	url = git@github.com:gregsexton/gitv.git
+[submodule "config/vim/bundle/nerdtree"]
+	path = config/vim/bundle/nerdtree
+	url = git@github.com:scrooloose/nerdtree.git
+[submodule "config/vim/bundle/syntastic"]
+	path = config/vim/bundle/syntastic
+	url = git@github.com:scrooloose/syntastic.git
+[submodule "config/vim/bundle/tagbar"]
+	path = config/vim/bundle/Tagbar
+	url = git@github.com:majutsushi/tagbar.git
+[submodule "config/vim/bundle/vdebug"]
+	path = config/vim/bundle/vdebug
+	url = git@github.com:joonty/vdebug.git
+[submodule "config/vim/bundle/vim-flavored-markdown"]
+	path = config/vim/bundle/vim-flavored-markdown
+	url = git@github.com:jtratner/vim-flavored-markdown.git
+[submodule "config/vim/bundle/vim-ipython"]
+	path = config/vim/bundle/vim-ipython
+	url = git@github.com:ivanov/vim-ipython.git
+[submodule "config/vim/bundle/vim-ledger"]
+	path = config/vim/bundle/vim-ledger
+	url = git@github.com:ledger/vim-ledger.git
+[submodule "config/vim/bundle/vim-markdown"]
+	path = config/vim/bundle/vim-markdown
+	url = git@github.com:tpope/vim-markdown.git

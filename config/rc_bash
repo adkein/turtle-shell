@@ -1,0 +1,185 @@
+#!/bin/bash
+
+export TRACKED=${TRACKED:-$HOME/tracked}
+export LC_ARE_YOU_CARL=1
+alias ssh="ssh -F $TRACKED/config/ssh_config"
+
+alias cd-tracked="cd $TRACKED"
+alias cd-bin="cd $TRACKED/bin"
+alias cd-config="cd $TRACKED/config"
+alias cd-vim="cd $TRACKED/config/.vim"
+alias cd-bundle="cd $TRACKED/config/.vim/bundle"
+
+VIMRC=$TRACKED/config/.vimrc
+
+alias vi="HOME=$TRACKED/config vim"
+alias view="vi -R"
+
+# A function for opening config files.
+vi_rc() {
+  rc=${1:-bash}
+  [[ $(echo $rc | sed -nE '/^vim?$/p') ]] && vi $VIMRC && return
+  [[ $(echo $rc | sed -n '/^mt$/p') ]] && vi $TRACKED/config/rc_moat && return
+  match_list=( $(ls $TRACKED/config/rc_${rc}* 2> /dev/null) ) 
+  if [[ ${#match_list[@]} -eq 0 ]]; then
+    echo "No such config file."
+    return
+  fi
+  case ${#match_list[@]} in
+    1 )
+      vi $TRACKED/config/$(basename ${match_list[0]})
+      ;;
+    * )
+      rc="$TRACKED/config/rc_${rc}"
+      [[ -f $rc ]] && vi $rc && return
+      echo "${#match_list[@]} config files share that prefix; be more specific." 
+      ;;
+  esac
+}
+alias virc="vi_rc"
+alias vi-vimrc="vi $VIMRC"
+
+export PATH=$TRACKED/bin:$PATH
+
+export HISTSIZE=10000
+export HISTCONTROL=erasedups
+
+set -o vi
+export EDITOR=vi
+
+vim_ide_cmds="-c TagbarToggle -c NERDTree"
+alias vi-ide="vi $vim_ide_cmds"
+
+# A way to tell if you're in a shell that was opened from within a Vim session
+is_vi_shell() {
+  if [[ -n "$VIMRUNTIME" ]]; then
+    echo True
+  else
+    echo False
+  fi
+}
+
+# Open man pages in Vim
+vman() { 
+  man $* | col -b | vim -R -u $VIMRC -c 'set ft=man nomod nolist' -; 
+}
+
+# frees c-s and c-q for use in terminal apps like vim
+stty -ixon -ixoff
+
+# list all diff files in current dir and subdirs
+alias swap_list="find . -name '\.*.sw[^fc]'"
+
+# vim syntastic
+for language in applescript c cpp css javascript lisp matlab perl php python sh tex; do
+  PATH=$PATH:$TRACKED/config/.vim/bundle/syntastic/syntax_checkers/$language
+done
+export PATH
+
+# options for ls differ between OSX and Linux
+if [[ `uname` == 'Linux' ]]; then
+  alias ll='ls -l -p -h --color'
+else
+  alias ll='ls -l -B -G -p -h'
+fi
+
+# python
+alias inb='ipython notebook --pylab=inline'
+
+# c
+alias gcc='gcc -lm -Wall'
+
+# php
+xdebug_port=9000
+alias phpd="php -d=xdebug.remote_port=$xdebug_port"
+
+# ping and put timestamp on response
+tping() { 
+  ping $1 | perl -nle 'print scalar(localtime), " ", $_' 
+}
+
+bind -m vi-insert '"\C-xs":shell-expand-line'
+bind -m vi-command '"\C-xs":shell-expand-line'
+bind -m vi-insert '"\C-\h":dynamic-complete-history'
+bind -m vi-insert '"\C-x*":glob-expand-word'
+bind -m vi-insert '"\C-xg":glob-list-expansions'
+
+# print the N last lines of history w/o entry numbers
+hc() {
+  re='^[0-9]+$'
+  if [[ -z "$1" ]]; then
+    history | cut -d ' ' -f 4-
+  elif ! [[ $1 =~ $re ]] ; then
+    echo "error: argument must be an integer"
+  else
+    history $(($1 + 1)) | cut -d ' ' -f 4- | head -n $1
+  fi
+}
+
+killall_by_path() { 
+  for p in $(ps aux | grep $1 | grep -v grep | tr -s ' ' | cut -d\  -f2); do
+    kill $p; 
+  done 
+}
+
+# print N empty lines
+sp() {
+  for i in $(seq ${1:-10}); do echo; done
+}
+
+# go back N dirs
+cddd() {
+  for i in $(seq ${1:-1}); do cd ..; done
+}
+
+# git
+alias gti=git
+source $TRACKED/bin/git-prompt.sh
+export PS1='\u@\h:\W$(__git_ps1 " (%s) ")\$ '
+
+# If you make a .gitconfig symlink to a gitconfig then this will happen:
+if [ -f $TRACKED/config/.gitconfig ]; then
+  alias git="HOME=$TRACKED/config git"
+fi
+
+pathadd() {
+    pathname=${2:-PATH}
+    path=${!pathname}
+    if [ -d "$1" ] && [[ ":$path:" != *":$1:"* ]]; then
+        path="${path:+"$path:"}$1"
+    fi
+    export $pathname=$path
+}
+
+path_append() {
+  pathish=${1:-PATH}
+  items=${@:2}
+  for item in ${items[@]}; do
+    if [[ -z $(echo ${!pathish} | sed -nE '/:'$item'(:|$)/p') ]]; then
+      export $pathish=${!pathish}:$item
+    fi
+  done
+}
+
+# Got tired of boxes aliasing rm and mv to have the '-i' flag.
+unalias rm mv 2> /dev/null
+
+# jq is utility for parsing and displaying JSON.
+# I keep binaries for both OSes in the repo, and then point to the right one
+# here.
+if [[ $(uname) = 'Linux' ]]; then
+  alias jq="jq-linux"
+else
+  alias jq="jq-osx"
+fi
+
+export INPUTRC="$TRACKED/config/inputrc"
+
+ps_aux_grep() {
+  ps aux | grep $1 | sed 's/\ \ */\ /g' | grep -v grep | cut -d\  -f 2
+}
+
+export GIT_EDITOR="HOME=$TRACKED/config vi"
+
+export PATH=$TRACKED/local/bin:$PATH
+

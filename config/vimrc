@@ -1,0 +1,280 @@
+set nocompatible
+
+let tracked = $TRACKED
+if empty(tracked)
+  let tracked = expand('<sfile>:p:h') . '/..'
+endif
+
+set viminfo=
+
+execute pathogen#infect()
+
+filetype plugin on
+filetype indent on
+
+" IMPORTANT: grep will sometimes skip displaying the file name if you
+" " search in a singe file. This will confuse Latex-Suite. Set your grep
+" " program to always generate a file-name.
+set grepprg=grep\ -nH\ $*
+
+set showmatch
+
+" OPTIONAL: Starting with Vim 7, the filetype of empty .tex files defaults to
+" " 'plaintex' instead of 'tex', which results in vim-latex not being loaded.
+" " The following changes the default filetype back to 'tex':
+let g:tex_flavor='latex'
+
+":set term=builtin_ansi
+:set term=xterm-256color
+:set number
+:set hlsearch
+:set incsearch
+:syntax on
+
+" Press F4 to toggle highlighting on/off, and show current value.
+":noremap <F4> :set hlsearch! hlsearch?<CR>
+":map pj :!pj %<CR>
+
+" Status
+" ------
+"
+" Always display the status line
+set laststatus=2
+"
+" format string
+set statusline=%1*%{fugitive#statusline()}\ %*%f%1*%5m%*%=\L%-5l\ \C%-4c%5p%%\ [%L\ \lines]
+"set statusline+=%{SyntasticStatuslineFlag()}
+"
+" Show the current editing status
+set showmode
+
+"map  :w!<CR>:!aspell check %<CR>:e! %<CR>
+
+set ofu=syntaxcomplete#Complete
+
+:set smarttab expandtab nosmartindent
+:set shiftwidth=2 softtabstop=2 tabstop=2
+
+let g:pydiction_location = tracked.'/config/.vim/complete-dict'
+let g:pydiction_menu_height = 15
+"let Tlist_Ctags_Cmd = tracked.'/bin/ctags'
+
+:set tags=./tags,tags
+
+" HTML tag completion
+autocmd FileType html set omnifunc=htmlcomplete#CompleteTags
+
+color default
+
+" Enable spellcheck
+:set spell spelllang=en_us
+:set spell!
+
+" Get backspace working properly
+set backspace=indent,eol,start
+
+" Autoformat XML
+" au FileType xml exe ":silent 1,$!xmllint --format --recover - 2>/dev/null"
+
+" Set leader and localleader
+:let mapleader = "-"
+:let maplocalleader = "\\"
+
+
+" vimrc
+" ====
+" 
+" Determine vimrc in use
+if exists($MYVIMRC) == 0
+  let $MYVIMRC = tracked.'/config/.vimrc'
+endif
+"
+" Open .vimrc file in vertical window
+:nnoremap <leader>ev :vsplit $MYVIMRC<cr>G
+"
+" Source the .vimrc file
+:nnoremap <leader>sv :source $MYVIMRC<cr>
+
+
+" Mappings to put containing word in quotes
+:nnoremap <leader>" ciw"<esc>pa"<esc>
+:nnoremap <leader>' ciw'<esc>pa'<esc>
+
+
+" Toggle spellcheck on/off
+:nnoremap <leader>sp :set spell!<cr>
+
+
+" Toggle paste on/off
+:nnoremap <leader>pm :set paste!<cr>
+
+
+" Toggle line numbers on/off
+:nnoremap <leader>ln :set number!<cr>
+
+
+" Format html
+":autocmd BufWritePre,BufRead *.html :normal gg=G
+
+
+" Comment out a line of code
+:autocmd FileType css        nnoremap <buffer> <localleader>c I/*<esc>A*/<esc>
+:autocmd FileType js         nnoremap <buffer> <localleader>c I//<esc>
+:autocmd FileType python     nnoremap <buffer> <localleader>c I#
+:autocmd FileType bash     nnoremap <buffer> <localleader>c I#
+
+
+" Compile latex
+:au BufNewFile,BufRead *.tex nnoremap <leader>pl :!pdflatex_clean %<cr><cr>
+"" Compile latex
+"function UpdateLatex(texfilename)
+"  let pdf = substitute(a:texfilename, "tex$", "pdf", "")
+"  execute '!pdflatex '.a:texfilename.';pdflatex '.a:texfilename.';open '.pdf
+"endfunction
+""
+":au BufNewFile,BufRead *.tex nnoremap <leader>pl :call UpdateLatex('%')<cr><cr>
+
+
+" Press 'K' in normal mode to split a line. Overrides default manpage functionality
+":nnoremap K i<CR><Esc>
+
+
+let g:SuperTabDefaultCompletionType = "context"
+
+
+" xdebug
+" ====
+"
+let g:debuggerPort = 9086
+let g:vdebug_options = {
+\ 'path_maps': {"/mnt/hgfs/Sites/cakephp": "/Users/mark/Sites/cakephp"},
+\ 'server': '0.0.0.0',
+\ 'debug_file': '/tmp/vdebug.log',
+\ 'port': 9086
+\}
+let g:vdebug_options_defaults = {'port': 9086}
+
+au BufRead,BufNewFile *.md set filetype=markdown
+
+function! Datehead(daysago)
+    let date = system("date --date='" . shellescape(a:daysago) . " days ago' '+%A, %B %e, %Y'")
+    execute "normal! i" . date
+    execute "normal! k"
+    call Underline(1)
+endfunction
+"
+:nnoremap <leader>dh :call Datehead(0)<cr>
+
+
+" Prevent mouse from selecting line numbers along with text
+:set mouse=a
+
+" Multiline comments in visual block mode
+:vnoremap <leader>/ !sed '1 s/^/\/\*\ /' <bar> sed '$ s/$/\ \*\//'<cr>
+
+" Syntax-based code folding
+set foldmethod=syntax
+set foldlevelstart=1
+let javaScript_fold=1
+
+" Window arrangment for common notes and such
+:nnoremap <leader>sg :execute "source" tracked . "/src/vim/window_arrangement.vim"<cr>
+" -----
+function! SetSession()
+    execute "mksession! tracked/src/vim/window_arrangement.vim"
+endfunction
+:nnoremap <leader>ss :call SetSession()<cr>
+
+" Scroll all windows to their tops
+:nnoremap <leader>gg :windo normal gg<cr>
+
+" Make ":Man" command available in vim and make vim the default man page viewer
+execute "source" tracked . '/config/.vim/ftplugin/man.vim'
+
+:nnoremap <leader>qq :q<cr>
+:nnoremap <leader>qa :qa<cr>
+
+set tags=tags;
+
+" CtrlP plugin
+"set runtimepath^=tracked/config/.vim/bundle/ctrlp.vim
+
+" Mapping to save
+nnoremap <C-s> :w<cr>
+inoremap <C-s> <esc>:w<cr>
+
+" Mapping to reload
+nnoremap <leader>rl :w<cr>:e<cr>
+
+nnoremap <leader>gr :execute "vimgrep /" . expand("<cword>") . "/j **" <Bar> cw<cr>
+
+nnoremap <leader>nt :NERDTree<cr>
+let NERDTreeIgnore = ['\.pyc$']
+
+nnoremap <leader>tb :TagbarToggle<cr>
+
+":let g:tagbar_ctags_bin=tracked.'/bin/ctags'
+
+nnoremap <leader>te :tabedit<cr>
+nnoremap <leader>tc :tabclose<cr>
+
+nnoremap <leader>w- :resize +1<cr>
+nnoremap <leader>w= :resize -1<cr>
+nnoremap <leader>w. :vertical resize +1<cr>
+nnoremap <leader>w, :vertical resize -1<cr>
+
+nnoremap <leader>tj :exe "tjump /^" . expand("<cword>") . "$"<cr>
+
+set lazyredraw
+
+" sort of a "find usages" thing
+nnoremap <leader>fu :exe "noautocmd lvimgrep /" . expand("<cword>") . "(/j ./**"<cr>:lw<cr>
+
+set wildignore=**api/versions/beta/**,*api/versions/current/**
+set wildignore+=**/target/**
+set wildignore+=**/tags
+
+function! Pgrep(query)
+  execute "noautocmd vimgrep /" . a:query . "/j ./**"
+  execute "botright copen"
+endfunction
+
+function! LPgrep(query)
+  execute "noautocmd lvimgrep /" . a:query . "/j ./**"
+  execute "lw"
+endfunction
+
+vnoremap <leader>vg "zy:call Pgrep(getreg('z'))<cr>
+vnoremap <leader>lvg "zy:call LPgrep(getreg('z'))<cr>
+
+nnoremap <leader>srt :1,$!sort<cr>
+"
+" ack
+" ===
+"
+" for compatibility with ack versions <2.0, which don't have the '-s' option
+let g:ack_default_options = " -H --nocolor --nogroup --column"
+
+" interactive shell so that .bashrc is loaded
+set shellcmdflag=-ic
+
+map <C-\> :tab split<CR>:exec("tag ".expand("<cword>"))<CR>
+map <leader><C-]> :vsp <CR>:exec("tag ".expand("<cword>"))<CR>
+
+autocmd BufRead,BufNewFile *.py if expand('%:p') =~ '\/v2\.\?5\/' | setlocal shiftwidth=2 softtabstop=2 tabstop=2 | endif
+
+" Search for lines in a CSV with nonempty i^{th} field.
+for i in [1, 2, 3, 4, 5, 6, 7, 8, 9]
+  execute "nnoremap <leader>n" . i . " /^" . repeat("[^,]*,", i-1) . "[^,]\\\+<cr>"
+endfor
+
+let g:NERDTreeWinSize=28
+let g:tagbar_width=28
+
+augroup markdown
+    au!
+    au BufNewFile,BufRead *.md,*.markdown setlocal filetype=ghmarkdown
+augroup END
+
+nnoremap <leader>pst :set paste!<cr>
+

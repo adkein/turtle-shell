@@ -1,0 +1,26 @@
+[user]
+  name = Carl Smith
+  email = carl.smith@buttonfactory.com
+[alias]
+  br = branch
+  ci = commit
+  co = checkout
+  dc = "diff --cached"
+  df = diff
+  lg = log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit --date=relative
+  lol = log --graph --decorate --pretty=oneline --abbrev-commit
+  lola = log --graph --decorate --pretty=oneline --abbrev-commit --all
+  ls-ignored = ls-files --others -i --exclude-standard
+  ls-untracked = ls-files --others --exclude-standard
+  new = !sh -c 'git log $1@{1}..$1@{0} "$@"'
+  st = status
+  stig = status --ignore-submodules
+  who = shortlog -s --
+[color]
+  branch = auto
+  diff = auto
+  interactive = auto
+  status = auto
+[core]
+  excludesfile = ~/.gitignore
+

@@ -1,0 +1,15 @@
+#!/bin/bash
+
+export LC_ARE_YOU_CARL=1
+
+SSHAGENT=`which ssh-agent`
+SSHAGENTARGS="-s"
+if [ -z "$SSH_AUTH_SOCK" -a -x "$SSHAGENT" ]; then
+    eval `$SSHAGENT $SSHAGENTARGS` &> /dev/null
+    trap "kill $SSH_AGENT_PID" 0
+fi
+
+#ssh-agent $(which bash)
+ssh-add $HOME/.ssh/my_key.key &> /dev/null
+ssh-add $HOME/.ssh/another_one.key &> /dev/null
+

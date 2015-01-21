@@ -1,0 +1,9 @@
+#!/bin/bash
+
+# Deletes all Vim swap files, recursively from current directory.
+
+for file in $(find . -name .*.sw?); do 
+    rm $file
+    echo "Deleted: $file"
+done
+

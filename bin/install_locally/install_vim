@@ -1,0 +1,70 @@
+#!/bin/bash
+
+usage() { echo "Usage: $(basename $0) [-d <extracted folder>] [-u <url>]" 1>&2; exit 1; }
+
+while getopts "d" o; do
+  case "$o" in
+    d)
+      folder=$OPTARG
+      ;;
+    u)
+      tarball=$OPTARG
+      ;;
+  esac
+done
+
+if [ ! -d "$TRACKED/local" ]; then
+  mkdir $TRACKED/local
+fi
+
+tarball=${tarball:-ftp://ftp.vim.org/pub/vim/unix/vim-7.3.tar.bz2}
+name=$(basename $tarball)
+extension=${tarball##*.}
+
+wget $tarball
+
+if [[ $extension = gz ]]; then
+  gunzip $name
+  rm $name
+  name=${name%.*}
+  extension=${name##*.}
+fi
+
+if [[ $extension = bz2 ]]; then
+  bunzip2 $name
+  rm $name
+  name=${name%.*}
+  extension=${name##*.}
+fi
+
+if [[ $extension = tar ]]; then
+  tar -xvf $name
+  rm $name
+  name=${name%.*}
+fi
+
+sudo apt-get install libncurses5-dev
+
+ls_output=$(ls | grep '^vim.*')
+folder=${folder:-$ls_output}
+folder=( $folder )
+if [[ ${#folder[@]} -ne 1 ]]; then
+  echo It is unclear what is the folder resulting from the tarball. 
+  echo Run again, passing the folder name.
+  usage
+fi
+
+(
+cd $folder/src/ 
+make distclean
+./configure --prefix=$TRACKED/local \
+            --with-features=huge \
+            --enable-pythoninterp \
+            --enable-perlinterp \
+            --enable-gui=gtk2
+make
+make install
+)
+
+rm -r $folder
+
