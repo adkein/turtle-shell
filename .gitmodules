@@ -34,3 +34,7 @@
 [submodule "config/vim/bundle/vim-markdown"]
 	path = config/vim/bundle/vim-markdown
 	url = git@github.com:tpope/vim-markdown.git
+[submodule "config/ipython/nbextensions/IPython-notebook-extensions"]
+	path = config/ipython/nbextensions/IPython-notebook-extensions
+	url = https://github.com/ipython-contrib/IPython-notebook-extensions.git
+	branch = 2.x
