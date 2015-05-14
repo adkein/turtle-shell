@@ -1,0 +1,13 @@
+Host *
+  SendEnv LANG LC_*
+
+Host foobar
+  HostName foo.bar.com
+  User batman
+  ForwardAgent yes
+
+Host github.com
+  HostName github.com
+  PreferredAuthentications publickey
+  IdentityFile ~/tracked/config/ssh/foo.pub
+

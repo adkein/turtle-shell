@@ -183,3 +183,22 @@ export GIT_EDITOR="HOME=$TRACKED/config vi"
 
 export PATH=$TRACKED/local/bin:$PATH
 
+alias dateft="date +%F__%T | sed 's/:/-/g'"
+alias date-tag="date +%y%m%d_%H%M%S"
+alias rev-head="git rev-parse --short=5 @"
+tag() {
+  res=$(date-tag)
+  if [[ -z $(git rev-parse 2>&1) ]]; then
+    res=${res}-$(rev-head)
+    [[ -n $(git status --short) ]] && res=${res}'+'
+  fi
+  echo $res
+}
+
+export IPYTHONDIR="$TRACKED/config/ipython"
+
+reflog() {
+  n=${1:-1}
+  git reflog --format="%H" -$n | tail -1
+}
+

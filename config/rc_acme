@@ -1,13 +1,8 @@
 #!/bin/bash
 
-export BIG_BUTTON_REPO="$HOME/big_buttons"
-export SMALL_BUTTON_REPO="$HOME/small_buttons"
+export IMPORTANT_WORK_DIR="$HOME/acme/important"
+export UNIMPORTANT_WORK_DIR="$HOME/acme/unimportant"
 
-alias cd-big-buttons="cd $BIG_BUTTON_REPO"
-alias cd-small-buttons="cd $SMALL_BUTTON_REPO"
-
-main_vm="10.20.30.40"
-main_key="$HOME/.ssh/main.key"
-main_user="button_guy"
-alias ssh-main="ssh -A -i $main_key ${main_user}@$main_vm"
+alias cd-important="cd $IMPORTANT_WORK_DIR"
+alias cd-unimportant="cd $UNIMPORTANT_WORK_DIR"
 

@@ -1,6 +1,6 @@
 [user]
   name = Carl Smith
-  email = carl.smith@buttonfactory.com
+  email = carl.smith@acme.com
 [alias]
   br = branch
   ci = commit

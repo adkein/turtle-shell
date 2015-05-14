@@ -1,6 +1,6 @@
 #!/bin/bash
 
-export LC_ARE_YOU_CARL=1
+export LC_YOUR_NAME_HERE=1
 
 SSHAGENT=`which ssh-agent`
 SSHAGENTARGS="-s"
@@ -12,4 +12,18 @@ fi
 #ssh-agent $(which bash)
 ssh-add $HOME/.ssh/my_key.key &> /dev/null
 ssh-add $HOME/.ssh/another_one.key &> /dev/null
+
+ssh_dir=$TRACKED/config/ssh
+export SSH_CONFIG=$ssh_dir/ssh_config
+alias ssh="$(which ssh) -F $SSH_CONFIG"
+alias scp="scp -F $SSH_CONFIG"
+alias vi-ssh="vi $SSH_CONFIG"
+alias cd-ssh="cd $ssh_dir"
+
+# For each host in the ssh_config, alias it for tab completion
+if [[ -f $SSH_CONFIG ]]; then
+  for host in $(sed -n '/^Host\ [A-Za-z0-9]*$/p' $SSH_CONFIG | sed 's/Host\ //'); do
+    alias ssh-$host="ssh $host"
+  done
+fi
 

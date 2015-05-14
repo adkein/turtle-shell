@@ -1,0 +1,7 @@
+if [[ -n $LC_YOUR_NAME_HERE ]]; then
+  export TRACKED=$HOME/tracked # Change 'tracked' to whatever you name your turtle-shell repo
+  for x in bash acme ssh; do 
+    source $TRACKED/config/rc_$x
+   done
+fi
+
