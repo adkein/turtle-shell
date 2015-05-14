@@ -38,3 +38,12 @@
 	path = config/ipython/nbextensions/IPython-notebook-extensions
 	url = https://github.com/ipython-contrib/IPython-notebook-extensions.git
 	branch = 2.x
+[submodule "config/vim/bundle/jedi-vim"]
+	path = config/vim/bundle/jedi-vim
+	url = https://github.com/davidhalter/jedi-vim.git
+[submodule "config/vim/bundle/vim-json"]
+	path = config/vim/bundle/vim-json
+	url = https://github.com/elzr/vim-json.git
+[submodule "config/vim/bundle/vim-better-whitespace"]
+	path = config/vim/bundle/vim-better-whitespace
+	url = https://github.com/ntpeters/vim-better-whitespace.git

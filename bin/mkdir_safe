@@ -1,0 +1,20 @@
+#!/bin/bash
+
+usage() {
+  printf "Usage: $(basename $0) <dirname>\n" 1>&2
+  exit 1
+}
+
+[[ $# -ne 1 ]] && usage
+
+dirname=$1
+
+if [[ -d $dirname ]]; then
+  echo "Overwrite existing directory ${1}? [y/n]:"
+  read overwrite
+  [[ $overwrite != 'y' ]] && exit
+  rm -rf $dirname
+fi
+
+mkdir -p $dirname
+

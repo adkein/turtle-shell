@@ -1,0 +1,37 @@
+#!/bin/bash
+
+# A script for appending (or prepending) to paths, but only if the items to be
+# added aren't already in the path they are being added to.
+
+usage() {
+  echo "Usage: $(basename $0) [-a] [-d] <dir to add> [<path>]" 1>&2
+  exit 1
+}
+
+while getopts "ad" o; do
+  case "$o" in
+    a)
+      append=1
+      shift
+      ;;
+    d)
+      debug=1
+      shift
+      ;;
+    *)
+      usage
+      ;;
+  esac
+done
+
+pathname=${2:-PATH}
+path=${!pathname}
+if [ -d "$1" ] && [[ ":$path:" != *":$1:"* ]]; then
+  if [[ $append ]]; then
+    path=${path:+"$path:"}$1
+  else
+    path=${1}${path:+":$path"}
+  fi
+fi
+echo "export $pathname=$path"
+

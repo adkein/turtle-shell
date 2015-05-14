@@ -1,0 +1,13 @@
+#!/bin/bash
+
+filename="ctags-5.8"
+url="http://prdownloads.sourceforge.net/ctags/${filename}.tar.gz"
+wget $url
+gunzip ${filename}.tar.gz
+tar -xvf ${filename}.tar
+(
+  cd $filename
+  ./configure --prefix=$TRACKED/local
+  make
+  make install
+)

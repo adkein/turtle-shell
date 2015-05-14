@@ -1,0 +1,22 @@
+#!/bin/bash
+
+# A script to loop through days, echoing the date, from the given start date to
+# the given end date.
+
+usage() {
+  printf "Usage: $(basename $0) <start date> <end date>\n" 1>&2
+  exit 1
+}
+
+[[ ! $1 || ! $2 ]] && usage
+
+now=`date +"%Y-%m-%d" -d "$1"`
+end=`date +"%Y-%m-%d" -d "$2"`
+
+echo $now
+while [ "$now" != "$end" ] ;
+do
+  now=`date +"%Y-%m-%d" -d "$now + 1 day"`;
+  echo $now
+done
+

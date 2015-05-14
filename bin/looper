@@ -1,0 +1,33 @@
+#!/bin/bash
+
+usage() { prinf "Usage: $(basename $0) [-n <int>] [-c <command>] [-s <seconds>]\n" 1>&2; exit 1; }
+
+while getopts "n:c:d" o; do
+  case "$o" in
+    n)
+      n=$OPTARG
+      ;;
+    c)
+      cmd="$OPTARG"
+      ;;
+    d)
+      debug=1
+      ;;
+    s)
+      sleeptime=$OPTARG
+      ;;
+    *)
+      usage
+      ;;
+  esac
+done
+
+n=${n:-100}
+cmd=${cmd:-'echo $i bottles of beer.'}
+sleeptime=${sleeptime:-1}
+
+for i in $(seq $n); do
+  eval $cmd
+  sleep $sleeptime
+done
+
