@@ -2,11 +2,16 @@ set nocompatible
 
 let tracked = $TRACKED
 if empty(tracked)
-  let tracked = expand('<sfile>:p:h') . '/..'
+  let tracked = expand('<sfile>:p:h')
 endif
+let vim_home = $TRACKED . '/config'
 
-set viminfo=
+let $VIMRUNTIME = vim_home . '/.vim'
+"let $VIM="$TRACKED/local/share/vim"
 
+let &rtp = substitute(&rtp, $HOME, vim_home, 'g')
+"let &runtimepath .= ','.tracked.'/local/share/vim'
+"
 execute pathogen#infect()
 
 filetype plugin on
