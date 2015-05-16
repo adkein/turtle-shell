@@ -8,7 +8,9 @@ The solution is to carry your environment with you (hence "turtle"). The logic i
 1. You make a repo (perhaps modeled after turtle-shell) that has some one or more config files that serve as entry points. In turtle-shell the main one is config/rc_bash.
 2. You clone your configs repo onto the remote machine. Let's say you clone it into the home directory and that you name it 'my_things'.
 3. You define in your local .bashrc a locale variable, and specify in your local ssh_config that it be sent in SSH connections. Call it LC_YOUR_NAME_HERE.
-4. Append to the remote machine's .bashrc a line like `[[ -n $LC_YOUR_NAME_HERE ]] && source $HOME/my_things/config/rc_bash`
+4. Append to the remote machine's .bashrc a line like
+
+        [[ -n $LC_YOUR_NAME_HERE ]] && source $HOME/my_things/config/rc_bash
 
 __Note:__ I advise against keeping your configs in a public repository. Create instead a private repository or -- even more fun -- host your own. The contents of this repository are intended just as an illustration.
 
