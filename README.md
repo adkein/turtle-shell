@@ -10,10 +10,12 @@ The solution is to carry your environment with you (hence "turtle"). The logic i
 3. You define in your local .bashrc a locale variable, and specify in your local ssh_config that it be sent in SSH connections. Call it LC_YOUR_NAME_HERE.
 4. Append to the remote machine's .bashrc a line like `[[ -n $LC_YOUR_NAME_HERE ]] && source $HOME/my_things/config/rc_bash`
 
+__Note:__ I advise against keeping your configs in a public repository. Create instead a private repository or -- even more fun -- host your own. The contents of this repository are intended just as an illustration.
+
 Vim
 ----
 
-A major benefit, for me, to using something like turtle-shell is that I can more or less take for granted my personalized Vim environment. That includes the general mappings, settings, and functions defined in ones .vimrc file, as well as plugins installed using Bundle.
+A major benefit, for me, to using something like turtle-shell is that I can more or less take for granted my personalized Vim environment. That includes the general mappings, settings, and functions defined in ones .vimrc file, as well as plugins installed using [pathogen](https://github.com/tpope/vim-pathogen).
 
 You can put your own .vimrc file and .vim folder in the config/ directory of turtle-shell. There are lines in config/rc_bash that set environment variables and aliases pointing Vim to those configs.
 
