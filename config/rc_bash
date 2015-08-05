@@ -12,7 +12,7 @@ alias cd-bundle="cd $TRACKED/config/.vim/bundle"
 
 VIMRC=$TRACKED/config/.vimrc
 
-alias vi="HOME=$TRACKED/config vim"
+alias vi="vi -u $TRACKED/config/.vimrc"
 alias view="vi -R"
 
 # A function for opening config files.
